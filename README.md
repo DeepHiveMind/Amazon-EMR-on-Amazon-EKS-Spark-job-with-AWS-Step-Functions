@@ -8,11 +8,11 @@ In this page, we explain how you can orchestrate an Amazon EMR on EKS job with S
 
 ## Agenda
 
--Use case overview
--Architecture overview
--Prerequisites
--Create a Step Functions state machine
--Create an EventBridge scheduling rule
--Validate the output with an Athena query
--Create reports in QuickSight
--Conclusion
+- Use case overview
+- Architecture overview
+- Prerequisites
+- Create a Step Functions state machine
+- Create an EventBridge scheduling rule
+- Validate the output with an Athena query
+- Create reports in QuickSight
+- Conclusion
