@@ -37,6 +37,7 @@ When the summarized output is available in the S3 output directory, we can run a
 ##Architecture overview
 To automate the complete process, we use the following architecture, which integrates Step Functions for orchestration, Amazon EMR on EKS for data transformations, Athena for data analysis with standard SQL, QuickSight for business intelligence (BI) reporting, and EventBridge for scheduling the Step Functions workflow.
 
+![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-1.jpg)
 
 The architecture includes the following steps:
 - **Step 1** – User uploads input CSV files to the defined S3 input bucket.
@@ -46,5 +47,8 @@ The architecture includes the following steps:
 - **Steps 8 and 9** – After we create the virtual table created in the Data Catalog through Athena, data analysts can use Athena to query the data with standard SQL statements or can build QuickSight reports by connecting to Athena tables.
 
 When we talk about Amazon EMR virtual cluster integration with Amazon EKS, the architecture looks like the following diagram, in which an EKS cluster can support multitenancy with different Spark versions and configurations backed by Amazon Elastic Compute Cloud (Amazon EC2) or AWS Fargate computing resources.
+
+![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-2.jpg)
+
 
 
