@@ -33,3 +33,18 @@ When our Spark job is ready, we can deploy it through Step Functions, which does
 - Stops the cluster with the ```deleteVirtualCluster (.sync)``` API. This allows you to delete the Chicago virtual cluster registered with your EKS cluster. The connector waits until the virtual cluster deletion is complete.
 
 When the summarized output is available in the S3 output directory, we can run an [Amazon Athena](https://aws.amazon.com/athena/?whats-new-cards.sort-by=item.additionalFields.postDateTime&whats-new-cards.sort-order=desc) query to create a virtual table of the output data and integrate [Amazon QuickSight](https://aws.amazon.com/quicksight/) for reporting.
+
+##Architecture overview
+To automate the complete process, we use the following architecture, which integrates Step Functions for orchestration, Amazon EMR on EKS for data transformations, Athena for data analysis with standard SQL, QuickSight for business intelligence (BI) reporting, and EventBridge for scheduling the Step Functions workflow.
+
+
+The architecture includes the following steps:
+- **Step 1** – User uploads input CSV files to the defined S3 input bucket.
+- **Step 2** – An EventBridge rule is scheduled to trigger the Step Functions state machine.
+- **Steps 3, 4, and 5** – Step Functions submits a Spark job to the Amazon EMR on EKS cluster, which reads input data from S3 input bucket. After it applies transformations, it     writes the summarized output to the S3 output bucket.
+- **Steps 6, 7.1, and 7.2** – After the Amazon EMR on EKS job, Step Functions invokes the Athena query, which creates a virtual table in the [AWS Glue](https://aws.amazon.com/glue/?whats-new-cards.sort-by=item.additionalFields.postDateTime&whats-new-cards.sort-order=desc) Data Catalog on top of the S3 output data.
+- **Steps 8 and 9** – After we create the virtual table created in the Data Catalog through Athena, data analysts can use Athena to query the data with standard SQL statements or can build QuickSight reports by connecting to Athena tables.
+
+When we talk about Amazon EMR virtual cluster integration with Amazon EKS, the architecture looks like the following diagram, in which an EKS cluster can support multitenancy with different Spark versions and configurations backed by Amazon Elastic Compute Cloud (Amazon EC2) or AWS Fargate computing resources.
+
+
