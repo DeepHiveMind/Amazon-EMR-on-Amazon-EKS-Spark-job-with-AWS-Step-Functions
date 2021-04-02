@@ -64,9 +64,11 @@ To create a Step Functions state machine, complete the following steps:
 3. For **Type**, select **Standard.**
 
 ![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-3.jpg)
+
 In the **Definition** section, Step Functions provides a list of service actions that you can use to automatically generate a code snippet for your state machine’s state. The following screenshot shows that we have options to create an EMR virtual cluster, submit a job to it, and delete the cluster.
 
 ![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-4.jpg)
+
 4. For Generate code snippet, choose Amazon EMR on EKS: Create a virtual cluster.
 5. For Enter virtual cluster name, enter a name for your cluster.
 6. For Enter Container provider, enter the following code:
@@ -85,6 +87,7 @@ The JSON snippet appears in the Preview pane.
 6. Choose Copy to clipboard.
 
 ![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-5.jpg)
+
 7. Follow the user interface to generate the state machine JSON for Start a job run and Delete a virtual cluster, then integrate them into the final state machine JSON that also has an Athena query.
 The following code is the final Step Functions state machine JSON, which you can refer to. Make sure to replace the variables related to your EKS cluster ID, AWS Identity and Access Management (IAM) role name, S3 bucket paths, and other placeholders.
 ```
@@ -176,7 +179,9 @@ The following code is the final Step Functions state machine JSON, which you can
 }
 ```
 The following diagram is the visual representation of the state machine flow.
+
 ![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-6.jpg)
+
 The Step Functions definition shows that it invokes createVirtualCluster for Amazon EMR on EKS, it invokes StartJobRun with the PySpark script as the parameter, and triggers the deleteVirtualCluster step. You can embed the cluster creation and deletion step within the Step Functions or have the cluster created beforehand and just invoke the startJobRun within Step Functions. We recommend you create the Amazon EMR on EKS cluster once and keep it active for multiple job runs, because keeping it active in idle state doesn’t consume any resources or add anything to the overall cost.
 The following code is the PySpark script available in Amazon S3, which reads the yellow taxi and green taxi datasets from Amazon S3 as Spark DataFrames, creates an aggregated summary output through SparkSQL transformations, and writes the final output to Amazon S3 in Parquet format:
 ```
