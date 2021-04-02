@@ -56,3 +56,151 @@ Before beginning this tutorial, make sure you have the required permissions to c
 For instructions on creating the EKS cluster and enabling access for Amazon EMR on EKS, see [Setting up](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up.html).
 Additionally, create the S3 input and output buckets with the required subfolders to capture the input bucket and output buckets.
 
+## Create a Step Functions state machine
+
+To create a Step Functions state machine, complete the following steps:
+1. On the Step Functions console, choose **Create state machine.**
+2. For Define state machine, select **Author with code snippets.**
+3. For **Type**, select **Standard.**
+
+
+In the **Definition** section, Step Functions provides a list of service actions that you can use to automatically generate a code snippet for your state machine’s state. The following screenshot shows that we have options to create an EMR virtual cluster, submit a job to it, and delete the cluster.
+
+
+4. For Generate code snippet, choose Amazon EMR on EKS: Create a virtual cluster.
+5. For Enter virtual cluster name, enter a name for your cluster.
+6. For Enter Container provider, enter the following code:
+```
+{
+  "Id": "<existing-eks-cluster-id>",
+  "Type": "EKS",
+  "Info": {
+    "EksInfo": {
+      "Namespace": "<eks-cluster-namespace>"
+    }
+  }
+}
+```
+The JSON snippet appears in the Preview pane.
+6. Choose Copy to clipboard.
+
+7. Follow the user interface to generate the state machine JSON for Start a job run and Delete a virtual cluster, then integrate them into the final state machine JSON that also has an Athena query.
+The following code is the final Step Functions state machine JSON, which you can refer to. Make sure to replace the variables related to your EKS cluster ID, AWS Identity and Access Management (IAM) role name, S3 bucket paths, and other placeholders.
+```
+{
+  "Comment": "An example of the Amazon States Language for creating a virtual cluster, running jobs and terminating the cluster using EMR on EKS",
+  "StartAt": "Create EMR-EKS Virtual Cluster",
+  "States": {
+    "Create EMR-EKS Virtual Cluster": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::emr-containers:createVirtualCluster",
+      "Parameters": {
+        "Name": "<emr-virtual-cluster-name>",
+        "ContainerProvider": {
+          "Id": "<eks-cluster-id>",
+          "Type": "EKS",
+          "Info": {
+            "EksInfo": {
+              "Namespace": "<eks-namespace>"
+            }
+          }
+        }
+      },
+      "ResultPath": "$.cluster",
+      "Next": "Submit PySpark Job"
+    },
+    "Submit PySpark Job": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::emr-containers:startJobRun.sync",
+      "Parameters": {
+        "Name": "<pyspark-job-name>",
+        "VirtualClusterId.$": "$.cluster.Id",
+        "ExecutionRoleArn": "arn:aws:iam::<aws-account-id>:role/<role-name>",
+        "ReleaseLabel": "emr-6.2.0-latest",
+        "JobDriver": {
+          "SparkSubmitJobDriver": {
+            "EntryPoint": "s3://<bucket-name-path>/<script-name>.py",
+            "EntryPointArguments": [
+              "60"
+            ],
+            "SparkSubmitParameters": "--conf spark.driver.cores=1 --conf spark.executor.instances=1 --conf spark.kubernetes.pyspark.pythonVersion=3 --conf spark.executor.memory=1G --conf spark.driver.memory=1G --conf spark.executor.cores=1 --conf spark.dynamicAllocation.enabled=false"
+          }
+        },
+        "ConfigurationOverrides": {
+          "ApplicationConfiguration": [
+            {
+              "Classification": "spark-defaults",
+              "Properties": {
+                "spark.executor.instances": "1",
+                "spark.executor.memory": "1G"
+              }
+            }
+          ],
+          "MonitoringConfiguration": {
+            "PersistentAppUI": "ENABLED",
+            "CloudWatchMonitoringConfiguration": {
+              "LogGroupName": "<log-group-name>",
+              "LogStreamNamePrefix": "<log-stream-prefix>"
+            },
+            "S3MonitoringConfiguration": {
+              "LogUri": "s3://<log-bucket-path>"
+            }
+          }
+        }
+      },
+      "ResultPath": "$.job",
+      "Next": "Delete EMR-EKS Virtual Cluster"
+    },
+    "Delete EMR-EKS Virtual Cluster": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::emr-containers:deleteVirtualCluster.sync",
+      "Parameters": {
+        "Id.$": "$.job.VirtualClusterId"
+      },
+      "Next": "Create Athena Summarized Output Table"
+    },
+    "Create Athena Summarized Output Table": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+      "Parameters": {
+        "QueryString": "CREATE EXTERNAL TABLE IF NOT EXISTS default.nyc_taxi_avg_summary(`type` string, `avgDist` double, `avgCostPerMile` double, `avgCost` double) ROW FORMAT SERDE   'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe' STORED AS INPUTFORMAT   'org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat' OUTPUTFORMAT   'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat' LOCATION  's3://<output-bucket-path>/nyc-taxi-records/output/' TBLPROPERTIES ('classification'='parquet', 'compressionType'='none', 'typeOfData'='file')",
+        "WorkGroup": "primary",
+        "ResultConfiguration": {
+           "OutputLocation": "s3://<athena-query-results-bucket-path>/"
+        }
+      },
+      "End": true
+    }
+  }
+}
+```
+The following diagram is the visual representation of the state machine flow.
+
+The Step Functions definition shows that it invokes createVirtualCluster for Amazon EMR on EKS, it invokes StartJobRun with the PySpark script as the parameter, and triggers the deleteVirtualCluster step. You can embed the cluster creation and deletion step within the Step Functions or have the cluster created beforehand and just invoke the startJobRun within Step Functions. We recommend you create the Amazon EMR on EKS cluster once and keep it active for multiple job runs, because keeping it active in idle state doesn’t consume any resources or add anything to the overall cost.
+The following code is the PySpark script available in Amazon S3, which reads the yellow taxi and green taxi datasets from Amazon S3 as Spark DataFrames, creates an aggregated summary output through SparkSQL transformations, and writes the final output to Amazon S3 in Parquet format:
+```
+import sys
+import time
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import * 
+from pyspark.sql.types import *
+ 
+spark =  SparkSession.builder.appName("nyc-taxi-trip-summary").getOrCreate()
+ 
+YellowTaxiDF =  spark.read.option("header",True).csv("s3://<input-bucket-path>/nyc-taxi-records/input/yellow-taxi/")
+GreenTaxiDF =  spark.read.option("header",True).csv("s3://<input-bucket-path>/nyc-taxi-records/input/green-taxi/")
+ 
+YellowTaxiDF.registerTempTable("yellow_taxi")
+GreenTaxiDF.registerTempTable("green_taxi")
+ 
+TaxiSummaryDF = spark.sql("SELECT 'yellow' as type,  round(avg(trip_distance),2) AS avgDist,  round(avg(total_amount/trip_distance),2) AS avgCostPerMile,  round(avg(total_amount),2) avgCost from yellow_taxi WHERE trip_distance >  0 AND total_amount > 0 UNION SELECT 'green' as type, round(avg(trip_distance),2)  AS avgDist, round(avg(total_amount/trip_distance),2) AS avgCostPerMile,  round(avg(total_amount),2) avgCost from green_taxi WHERE trip_distance > 0  AND total_amount > 0")
+ 
+TaxiSummaryDF.write.mode(SaveMode.Overwrite).parquet("s3://<output-bucket-path>/nyc-taxi-records/output/")
+ 
+spark.stop()
+```
+When the PySpark job is complete, Step Functions invokes the following Athena query to create a virtual table on top of the output Parquet files:
+```
+CREATE EXTERNAL TABLE `nyc_taxi_avg_summary`(`type` string, `avgDist` double, `avgCostPerMile` double, `avgCost` double) ROW FORMAT SERDE   'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe' STORED AS INPUTFORMAT   'org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat' OUTPUTFORMAT   'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat' LOCATION  's3://<output-bucket-path>/nyc-taxi-records/output/' TBLPROPERTIES ('classification'='parquet', 'compressionType'='none', 'typeOfData'='file')
+```
+9. 
