@@ -34,7 +34,7 @@ When our Spark job is ready, we can deploy it through Step Functions, which does
 
 When the summarized output is available in the S3 output directory, we can run an [Amazon Athena](https://aws.amazon.com/athena/?whats-new-cards.sort-by=item.additionalFields.postDateTime&whats-new-cards.sort-order=desc) query to create a virtual table of the output data and integrate [Amazon QuickSight](https://aws.amazon.com/quicksight/) for reporting.
 
-##Architecture overview
+## Architecture overview
 To automate the complete process, we use the following architecture, which integrates Step Functions for orchestration, Amazon EMR on EKS for data transformations, Athena for data analysis with standard SQL, QuickSight for business intelligence (BI) reporting, and EventBridge for scheduling the Step Functions workflow.
 
 ![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-1.jpg)
@@ -50,5 +50,9 @@ When we talk about Amazon EMR virtual cluster integration with Amazon EKS, the a
 
 ![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-2.jpg)
 
+## Prerequisites
 
+Before beginning this tutorial, make sure you have the required permissions to create the necessary resources as part of the solution. You should also have the EKS cluster available already.
+For instructions on creating the EKS cluster and enabling access for Amazon EMR on EKS, see [Setting up](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up.html).
+Additionally, create the S3 input and output buckets with the required subfolders to capture the input bucket and output buckets.
 
