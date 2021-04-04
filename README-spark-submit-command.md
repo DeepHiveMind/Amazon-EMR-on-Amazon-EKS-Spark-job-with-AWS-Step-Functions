@@ -56,3 +56,4 @@ Using ```--deploy-mode```, you specify where to run the Spark application driver
 | VALUE        | DESCRIPTION |
 | -------------|:-------------:|
 | cluster      |In cluster mode, the driver runs on one of the worker nodes, and this node shows as a driver on the Spark Web UI of your application. cluster mode is used to run production jobs.|
+| client       | In client mode, the driver runs locally where you are submitting your application from. client mode is majorly used for interactive and debugging purposes. Note that in client mode only the driver runs locally and all other executors run on different nodes on the cluster.|              
