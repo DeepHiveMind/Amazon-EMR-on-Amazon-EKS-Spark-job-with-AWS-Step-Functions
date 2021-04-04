@@ -67,8 +67,8 @@ Using ```--master option```, you specify what cluster manager to use to run your
 | Yarn            | yarn|Use yarn if your cluster resources are managed by Hadoop Yarn.|
 | Mesos           | mesos://HOST:PORT|use mesos://HOST:PORT for Mesos cluster manager, replace the host and port of Mesos cluster manager.|
 | Standalone      | spark://HOST:PORT|Use spark://HOST:PORT for Standalone cluster, replace the host and port of stand-alone cluster.|
-| Kubernetes      | k8s://HOST:PORT k8s://https://HOST:PORT| Use k8s://HOST:PORT for Kubernetes, replace the host and port of Kubernetes. This by default connects with https, but if you wanted to use unsecured use k8s://https://HOST:PORT|                    
-| local           |local local[k] local[K,F] | Use local to run locally with a one worker thread. Use local[k] and specify k with the number of cores you have locally, this runs application with k worker threads. Use local[k,F] and specify F with number of attempts it should run when failed.|
+| Kubernetes      | k8s://HOST:PORT<br />k8s://https://HOST:PORT| Use k8s://HOST:PORT for Kubernetes, replace the host and port of Kubernetes. This by default connects with https, but if you wanted to use unsecured use k8s://https://HOST:PORT|                    
+| local           |local<br />local[k]<br />local[K,F] | Use local to run locally with a one worker thread.<br />Use local[k] and specify k with the number of cores you have locally, this runs application with k worker threads.<br />Use local[k,F] and specify F with number of attempts it should run when failed.|
                     
 **Example**: Below submits applications to yarn managed cluster.
 
