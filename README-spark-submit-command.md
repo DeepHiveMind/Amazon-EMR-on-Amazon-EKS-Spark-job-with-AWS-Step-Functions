@@ -225,3 +225,47 @@ Below are some of the options & configurations specific to PySpark application.
    wordByExample.py
 ```
 
+## 6. Submitting Application to Mesos
+
+Here, we are submitting spark application on a Mesos managed cluster using deployment mode with 5G memory and 8 cores for each executor.
+```
+# Running Spark application on Mesos cluster manager
+./bin/spark-submit \
+  --class org.apache.spark.examples.SparkPi \
+  --master mesos://192.168.231.132:7077 \
+  --deploy-mode cluster \
+  --executor-memory 5G \
+  --executor-cores 8 \
+   http://examples/jars/spark-examples_versionxx.jar 80
+```
+
+## 7. Submitting Application to Kubernetes
+
+The below example runs Spark application on a Kubernetes managed cluster using cluster deployment mode with 5G memory and 8 cores for each executor.
+```
+# Running Spark application on Kubernetes cluster
+./bin/spark-submit \
+  --class org.apache.spark.examples.SparkPi \
+  --master k8s://192.168.231.132:443 \
+  --deploy-mode cluster \
+  --executor-memory 5G \
+  --executor-cores 8 \
+  /spark-home/examples/jars/spark-examples_versionxx.jar 80
+```
+
+## 8. Submitting Application to Standalone
+
+The below example runs Spark application on a Standalone cluster using cluster deployment mode with 5G memory and 8 cores for each executor.
+
+```
+# Running Spark application on standalone cluster
+./bin/spark-submit \
+  --class org.apache.spark.examples.SparkPi \
+  --master spark://192.168.231.132:7077 \
+  --deploy-mode cluster \
+  --executor-memory 5G \
+  --executor-cores 8 \
+  /spark-home/examples/jars/spark-examples_versionxx.jar 80
+```
+
+
