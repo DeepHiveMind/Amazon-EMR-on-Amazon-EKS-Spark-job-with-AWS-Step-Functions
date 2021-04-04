@@ -5,7 +5,7 @@ First, let’s see what Apache Spark is. The official definition of Apache Spark
 
 Let’s look into the architecture of Apache Spark.
 
-
+![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/Image-1-1.png)
 
 ## Spark Architecture
 As we can see that Spark follows Master-Slave architecture where we have one central coordinator and multiple distributed worker nodes. The central coordinator is called Spark Driver and it communicates with all the Workers.
