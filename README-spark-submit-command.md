@@ -137,9 +137,7 @@ Most of these configurations are the same for Spark applications written in Java
 | CONFIGURATION KEY | CONFIGURATION DESCRIPTION |
 | :------|:------------|
 | spark.executor.memoryOverhead|Number of partitions to create for wider shuffle transformations (joins and aggregations).
-| spark.serializer|org.apache.spark.serializer.
-JavaSerializer (default)
-org.apache.spark.serializer.KryoSerializer|
+| spark.serializer|org.apache.spark.serializer.<br />JavaSerializer (default)<br />org.apache.spark.serializer.KryoSerializer|
 | spark.sql.files.maxPartitionBytes|The maximum number of bytes to be used for every partition when reading files. Default 128MB.|
 | spark.dynamicAllocation.enabled	|Specifies whether to dynamically increase or decrease the number of executors based on the workload. Default true.|
 | spark.dynamicAllocation.minExecutors|A minimum number of executors to use when dynamic allocation is enabled.|
