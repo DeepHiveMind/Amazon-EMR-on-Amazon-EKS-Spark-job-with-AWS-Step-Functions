@@ -63,7 +63,7 @@ Using ```--deploy-mode```, you specify where to run the Spark application driver
 Using ```--master option```, you specify what cluster manager to use to run your application. Spark currently supports Yarn, Mesos, Kubernetes, Stand-alone, and local. The uses of these are explained below.
 
 | CLUSTER MANAGER |  VALUE   | DESCRIPTION |
-| ----------------|:--------:|:-----------:|
+|:----------------|:---------|:------------|
 | Yarn            | yarn|Use yarn if your cluster resources are managed by Hadoop Yarn.|
 | Mesos           | mesos://HOST:PORT|use mesos://HOST:PORT for Mesos cluster manager, replace the host and port of Mesos cluster manager.|
 | Standalone      | spark://HOST:PORT|Use spark://HOST:PORT for Standalone cluster, replace the host and port of stand-alone cluster.|
@@ -86,7 +86,7 @@ While submitting an application, you can also specify how much memory and cores 
 While submitting an application, you can also specify how much memory and cores you wanted to give for driver and executors.
 
 | OPTION | DESCRIPTION |
-| ------:|:-----------:|
+| :------|:------------|
 | –driver-memory|Memory to be used by the Spark driver.|
 | –driver-cores|CPU cores to be used by the Spark driver|
 | –num-executors|The total number of executors to use.|            
@@ -109,7 +109,7 @@ While submitting an application, you can also specify how much memory and cores 
    #### 2.4 Other Options
    
 | OPTION | DESCRIPTION |
-| ------:|:-----------:|
+| :------|:------------|
 |–files|Use comma-separated files you wanted to use. Usually, these can be files from your resource folder. Using this option, Spark submits all these files to cluster.|
 |–verbose|Displays the verbose information. For example, writes all configurations spark application uses to the log file.|
 
