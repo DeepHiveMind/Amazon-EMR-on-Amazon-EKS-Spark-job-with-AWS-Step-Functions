@@ -209,3 +209,42 @@ When the PySpark job is complete, Step Functions invokes the following Athena qu
 ```
 CREATE EXTERNAL TABLE `nyc_taxi_avg_summary`(`type` string, `avgDist` double, `avgCostPerMile` double, `avgCost` double) ROW FORMAT SERDE   'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe' STORED AS INPUTFORMAT   'org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat' OUTPUTFORMAT   'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat' LOCATION  's3://<output-bucket-path>/nyc-taxi-records/output/' TBLPROPERTIES ('classification'='parquet', 'compressionType'='none', 'typeOfData'='file')
 ```
+
+## Create an EventBridge scheduling rule
+
+If you want to add incremental data to the S3 input bucket every month and update the summarized output, you can use EventBridge to schedule the invocation of our Step Functions state machine on the first day of every month.
+
+1. On the EventBridge console, under **Events**, choose **Rules**.
+2. Choose **Create a rule**.
+3. For **Name**, enter a name (for example, trigger-step-function-rule).
+4. Under **Define pattern**, select **Schedule**.
+5. Select **Cron expression**.
+6. Enter 001*?* to specify that the job runs on the first day of every month at midnight.
+
+
+
+7. In the **Select targets** section, for **Target**, choose **Step Functions state machine**.
+8. For **State machine**, choose your state machine.
+
+
+Now when the step function is being invoked, its run flow looks like the following screenshot, where blue represents the Amazon EMR on EKS PySpark job currently running.
+
+
+
+Now if we navigate to the Amazon EMR console and choose Virtual clusters under EMR on EKS, we should see the cluster listed with Running status.
+
+
+
+When you choose the cluster name, you should see the PySpark job with Running status and the View logs link, which opens the Spark History Server to monitor your Spark job.
+
+
+
+If the PySpark job fails for any unplanned reasons and you need rerun the Step Functions flow, you need to delete the existing Amazon EMR on EKS virtual cluster with the following CLI command. As of this writing, the Amazon EMR console doesn’t have an option to delete the Amazon EMR on EKS virtual cluster.
+```aws emr-containers delete-virtual-cluster —id <cluster-id>```
+
+When the PySpark job is complete, Step Functions invokes the Create Athena Summarized Output Table step, which runs a Create External Table SQL statement on top of the S3 output path. After all the steps are complete, we should see all steps as green, as shown in the following screenshot.
+
+
+
+You can also validate that the Amazon EMR on EKS virtual cluster is stopped and the S3 output path has a new set of Parquet files.
+
