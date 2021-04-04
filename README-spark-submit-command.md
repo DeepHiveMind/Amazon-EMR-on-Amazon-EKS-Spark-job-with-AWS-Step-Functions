@@ -111,8 +111,8 @@ While submitting an application, you can also specify how much memory and cores 
 | OPTION | DESCRIPTION |
 | ------:|:-----------:|
 |–files|Use comma-separated files you wanted to use.
-Usually, these can be files from your resource folder.
-Using this option, Spark submits all these files to cluster.|
+        Usually, these can be files from your resource folder.
+        Using this option, Spark submits all these files to cluster.|
 |–verbose|Displays the verbose information. For example, writes all configurations spark application uses to the log file.|
 
 **Note:** Files specified with ```--files``` are uploaded to the cluster.
