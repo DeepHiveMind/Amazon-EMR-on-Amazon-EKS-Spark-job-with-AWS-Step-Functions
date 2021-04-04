@@ -54,6 +54,23 @@ Below is a spark-submit command with the most-used command options.
 Using ```--deploy-mode```, you specify where to run the Spark application driver program. Spark support cluster and client deployment modes.
 
 | VALUE        | DESCRIPTION |
-| -------------|:-------------:|
+| -------------|:-----------:|
 | cluster      |In cluster mode, the driver runs on one of the worker nodes, and this node shows as a driver on the Spark Web UI of your application. cluster mode is used to run production jobs.|
-| client       | In client mode, the driver runs locally where you are submitting your application from. client mode is majorly used for interactive and debugging purposes. Note that in client mode only the driver runs locally and all other executors run on different nodes on the cluster.|              
+| client       | In client mode, the driver runs locally where you are submitting your application from. client mode is majorly used for interactive and debugging purposes. Note that in client mode only the driver runs locally and all other executors run on different nodes on the cluster.|        
+
+#### 2.2 Cluster Managers (–master)
+
+Using ```--master option```, you specify what cluster manager to use to run your application. Spark currently supports Yarn, Mesos, Kubernetes, Stand-alone, and local. The uses of these are explained below.
+
+| CLUSTER MANAGER |  VALUE   | DESCRIPTION |
+| ----------------|:--------:|:-----------:|
+| Yarn            | yarn|Use yarn if your cluster resources are managed by Hadoop Yarn.|
+| Mesos           | mesos://HOST:PORT|use mesos://HOST:PORT for Mesos cluster manager, replace the host and port of Mesos cluster manager.|
+| Standalone      | spark://HOST:PORT|Use spark://HOST:PORT for Standalone cluster, replace the host and port of stand-alone cluster.|
+| Kubernetes|     | k8s://HOST:PORT|Use k8s://HOST:PORT for Kubernetes, replace the host and port of Kubernetes. This by default connects with https, but if you wanted to use unsecured use k8s://https://HOST:PORT|
+                    k8s://https://HOST:PORT|Use local to run locally with a one worker thread.
+Use local[k] and specify k with the number of cores you have locally, this runs application with k worker threads.
+use local[k,F] and specify F with number of attempts it should run when failed.|
+| local|            local
+                    local[k]
+                    local[K,F]|
