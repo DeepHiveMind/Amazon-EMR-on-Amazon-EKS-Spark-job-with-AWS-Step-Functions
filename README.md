@@ -69,9 +69,9 @@ In the **Definition** section, Step Functions provides a list of service actions
 
 ![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-4.jpg)
 
-4. For Generate code snippet, choose Amazon EMR on EKS: Create a virtual cluster.
-5. For Enter virtual cluster name, enter a name for your cluster.
-6. For Enter Container provider, enter the following code:
+4. For **Generate code snippet**, **choose Amazon EMR on EKS: Create a virtual cluster**.
+5. For **Enter virtual cluster name**, enter a name for your cluster.
+6. For **Enter Container provider**, enter the following code:
 ```
 {
   "Id": "<existing-eks-cluster-id>",
@@ -83,8 +83,8 @@ In the **Definition** section, Step Functions provides a list of service actions
   }
 }
 ```
-The JSON snippet appears in the Preview pane.
-6. Choose Copy to clipboard.
+The JSON snippet appears in the **Preview** pane.
+6. Choose **Copy to clipboard**.
 
 ![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-5.jpg)
 
