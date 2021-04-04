@@ -18,3 +18,32 @@ In this page, We will explain different spark-submit command options and configu
 - Submitting Application to Mesos
 - Submitting Application to Kubernetes
 - Submitting Application to Standalone
+
+## Spark Submit Command
+
+Spark binary comes with ```spark-submit.sh``` script file for Linux, Mac, and ```spark-submit.cmd```command file for windows, these scripts are available at ```$SPARK_HOME/bin``` directory.
+
+If you are using [Cloudera distribution](https://www.cloudera.com/downloads/cdh.html), you may also find ```spark2-submit.sh``` which is used to run Spark 2.x applications. By adding this Cloudera supports both Spark 1.x and Spark 2.x applications to run in parallel.
+
+spark-submit command internally uses ```org.apache.spark.deploy.SparkSubmit``` class with the options and command line arguments you specify.
+Below is a spark-submit command with the most-used command options.
+```
+./bin/spark-submit \
+  --master <master-url> \
+  --deploy-mode <deploy-mode> \
+  --conf <key<=<value> \
+  --driver-memory <value>g \
+  --executor-memory <value>g \
+  --executor-cores <number of cores>  \
+  --jars  <comma separated dependencies>
+  --class <main-class> \
+  <application-jar> \
+  [application-arguments]
+ ```
+ You can also submit the application like below without using the script.
+ 
+ ```
+ ./bin/spark-class org.apache.spark.deploy.SparkSubmit <options & arguments>
+ ```
+ ## Spark Submit Options
+ 
