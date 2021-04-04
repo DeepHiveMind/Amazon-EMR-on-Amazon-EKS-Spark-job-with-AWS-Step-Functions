@@ -87,9 +87,22 @@ While submitting an application, you can also specify how much memory and cores 
 
 | OPTION | DESCRIPTION |
 | ------:|:-----------:|
-|        |             |
-|        |             |
-|        |             |
-|        |             |
-|        |             |
-|        |             |
+| –driver-memory|Memory to be used by the Spark driver.|
+| –driver-cores|CPU cores to be used by the Spark driver|
+| –num-executors|The total number of executors to use.|            
+| –executor-memory|Amount of memory to use for the executor process.|             
+| –executor-cores|Number of CPU cores to use for the executor process.|             
+| –total-executor-cores|The total number of executor cores to use.|
+
+**Example:**
+```
+./bin/spark2-submit \
+   --master yarn \
+   --deploy-mode cluster \
+   --driver-memory 8g \
+   --executor-memory 16g \
+   --executor-cores 2  \
+   --class org.apache.spark.examples.SparkPi \
+   /spark-home/examples/jars/spark-examples_versionxx.jar 80```
+   
+   
