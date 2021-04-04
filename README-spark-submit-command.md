@@ -144,3 +144,31 @@ Most of these configurations are the same for Spark applications written in Java
 |spark.dynamicAllocation.maxExecutors|A maximum number of executors to use when dynamic allocation is enabled.|
 |spark.executor.extraJavaOptions|Specify JVM options (see example below)|
 
+Besides these, Spark also supports [many more configurations](https://spark.apache.org/docs/latest/configuration.html).
+**Example :**
+```
+./bin/spark2-submit \
+--master yarn \
+--deploy-mode cluster \
+--conf "spark.sql.shuffle.partitions=20000" \
+--conf "spark.executor.memoryOverhead=5244" \
+--conf "spark.memory.fraction=0.8" \
+--conf "spark.memory.storageFraction=0.2" \
+--conf "spark.serializer=org.apache.spark.serializer.KryoSerializer" \
+--conf "spark.sql.files.maxPartitionBytes=168435456" \
+--conf "spark.dynamicAllocation.minExecutors=1" \
+--conf "spark.dynamicAllocation.maxExecutors=200" \
+--conf "spark.dynamicAllocation.enabled=true" \
+--conf "spark.executor.extraJavaOptions=-XX:+PrintGCDetails -XX:+PrintGCTimeStamps" \ 
+--files /path/log4j.properties,/path/file2.conf,/path/file3.json \
+--class org.apache.spark.examples.SparkPi \
+/spark-home/examples/jars/spark-examples_repace-spark-version.jar 80
+```
+Alternatively, you can also set these globally @ ```$SPARK_HOME/conf/spark-defaults.conf``` to apply for every Spark application. And you can also set using ```SparkConf``` programmatically.
+```
+val config = new SparkConf()
+config.set("spark.sql.shuffle.partitions",300)
+val spark=SparkSession.builder().config(config)
+```
+First preference goes to SparkConf, then spark-submit –config and then configs mentioned in spark-defaults.conf
+
