@@ -221,30 +221,31 @@ If you want to add incremental data to the S3 input bucket every month and updat
 5. Select **Cron expression**.
 6. Enter 001*?* to specify that the job runs on the first day of every month at midnight.
 
-
+![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-7.jpg)
 
 7. In the **Select targets** section, for **Target**, choose **Step Functions state machine**.
 8. For **State machine**, choose your state machine.
 
+![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-8.jpg)
 
 Now when the step function is being invoked, its run flow looks like the following screenshot, where blue represents the Amazon EMR on EKS PySpark job currently running.
 
-
+![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-9.jpg)
 
 Now if we navigate to the Amazon EMR console and choose Virtual clusters under EMR on EKS, we should see the cluster listed with Running status.
 
-
+![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-10.jpg)
 
 When you choose the cluster name, you should see the PySpark job with Running status and the View logs link, which opens the Spark History Server to monitor your Spark job.
 
-
+![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-11.jpg)
 
 If the PySpark job fails for any unplanned reasons and you need rerun the Step Functions flow, you need to delete the existing Amazon EMR on EKS virtual cluster with the following CLI command. As of this writing, the Amazon EMR console doesn’t have an option to delete the Amazon EMR on EKS virtual cluster.
 ```aws emr-containers delete-virtual-cluster —id <cluster-id>```
 
 When the PySpark job is complete, Step Functions invokes the Create Athena Summarized Output Table step, which runs a Create External Table SQL statement on top of the S3 output path. After all the steps are complete, we should see all steps as green, as shown in the following screenshot.
 
-
+![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-12.jpg)
 
 You can also validate that the Amazon EMR on EKS virtual cluster is stopped and the S3 output path has a new set of Parquet files.
 
