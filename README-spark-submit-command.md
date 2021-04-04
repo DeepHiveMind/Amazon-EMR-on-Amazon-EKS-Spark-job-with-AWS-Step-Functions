@@ -50,6 +50,6 @@ Below is a spark-submit command with the most-used command options.
  Below I have explained some of the common options, configurations, and specific options to use with Scala and Python. You can also get all options available by running the below command.
 
 ```./bin/spark-submit --help```
-###### 2.1 Deployment Modes (–deploy-mode)
+#### 2.1 Deployment Modes (–deploy-mode)
 Using ```--deploy-mode```, you specify where to run the Spark application driver program. Spark support cluster and client deployment modes.
 
