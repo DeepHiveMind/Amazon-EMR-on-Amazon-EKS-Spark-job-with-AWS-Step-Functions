@@ -53,3 +53,6 @@ Below is a spark-submit command with the most-used command options.
 #### 2.1 Deployment Modes (–deploy-mode)
 Using ```--deploy-mode```, you specify where to run the Spark application driver program. Spark support cluster and client deployment modes.
 
+| VALUE        | DESCRIPTION |
+| -------------|:-------------:|
+| cluster      |In cluster mode, the driver runs on one of the worker nodes, and this node shows as a driver on the Spark Web UI of your application. cluster mode is used to run production jobs.|
