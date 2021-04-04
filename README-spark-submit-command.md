@@ -145,6 +145,7 @@ Most of these configurations are the same for Spark applications written in Java
 |spark.executor.extraJavaOptions|Specify JVM options (see example below)|
 
 Besides these, Spark also supports [many more configurations](https://spark.apache.org/docs/latest/configuration.html).
+
 **Example :**
 ```
 ./bin/spark2-submit \
@@ -171,4 +172,56 @@ config.set("spark.sql.shuffle.partitions",300)
 val spark=SparkSession.builder().config(config)
 ```
 First preference goes to SparkConf, then spark-submit –config and then configs mentioned in spark-defaults.conf
+
+## 4. Submit Scala or Java Application
+
+Regardless of which language you use, most of the options are same however, there are few options that are specific to a language, for example, to run a Spark application written in Scala or Java, you need to use the additionally following options.
+
+| OPTION | DESCRIPTION |
+| :------|:------------|
+|–jars|If you have all dependency jar’s in a folder, you can pass all these jars using this spark submit –jars option. All your jar files should be comma-separated.
+for example –jars jar1.jar,jar2.jar, jar3.jar.|
+|–packages|All transitive dependencies will be handled when using this command.|
+|–class|Scala or Java class you wanted to run.This should be a fully qualified name with the package.For example org.apache.spark.examples.SparkPi.|
+
+**Note:** Files specified with --jars and --packages are uploaded to the cluster.
+**Example :**
+```
+./bin/spark-submit \
+--master yarn \
+--deploy-mode cluster \
+--conf "spark.sql.shuffle.partitions=20000" \
+--jars "dependency1.jar,dependency2.jar"
+--class com.sparkbyexamples.WordCountExample \
+spark-by-examples.jar 
+```
+
+## 5. Spark Submit PySpark (Python) Application
+
+When you wanted to submit a PySpark application, you need to specify the .py file you wanted to run or specify the .egg file.
+Below are some of the options & configurations specific to PySpark application.
+
+| PYSPARK SPECIFIC CONFIGURATIONS | DESCRIPTION |
+| :------|:------------|
+|–py-files|Use --py-files to add .py, .zip or .egg files.|
+|–config spark.executor.pyspark.memory|The amount of memory to be used by PySpark for each executor.|
+|–config spark.pyspark.driver.python|Python binary executable to use for PySpark in driver.|
+|–config spark.pyspark.python|Python binary executable to use for PySpark in both driver and executors.|
+
+**Note:** Files specified with --py-files are also uploaded to the cluster.
+**Example 1 :**
+```
+./bin/spark-submit \
+   --master yarn \
+   --deploy-mode cluster \
+   wordByExample.py
+```
+**Example 2 :**
+```
+./bin/spark-submit \
+   --master yarn \
+   --deploy-mode cluster \
+   --py-files file1.py,file2.py
+   wordByExample.py
+```
 
