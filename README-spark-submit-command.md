@@ -103,6 +103,34 @@ While submitting an application, you can also specify how much memory and cores 
    --executor-memory 16g \
    --executor-cores 2  \
    --class org.apache.spark.examples.SparkPi \
-   /spark-home/examples/jars/spark-examples_versionxx.jar 80```
+   /spark-home/examples/jars/spark-examples_versionxx.jar 80
+   ```
+   
+   #### 2.4 Other Options
+   
+| OPTION | DESCRIPTION |
+| ------:|:-----------:|
+|–files|Use comma-separated files you wanted to use.
+Usually, these can be files from your resource folder.
+Using this option, Spark submits all these files to cluster.|
+|–verbose|Displays the verbose information. For example, writes all configurations spark application uses to the log file.|
+
+**Note:** Files specified with ```--files``` are uploaded to the cluster.
+**Example:** Below example submits the application to yarn cluster manager by using cluster deployment mode and with 8g driver memory, 16g and 2 cores for each executor.
+
+```
+./bin/spark2-submit \
+   --verbose
+   --master yarn \
+   --deploy-mode cluster \
+   --driver-memory 8g \
+   --executor-memory 16g \
+   --executor-cores 2  \
+   --files /path/log4j.properties,/path/file2.conf,/path/file3.json
+   --class org.apache.spark.examples.SparkPi \
+   /spark-home/examples/jars/spark-examples_versionxx.jar 80
+ ```
+ 
+ ## 3. Spark Submit Configurations
    
    
