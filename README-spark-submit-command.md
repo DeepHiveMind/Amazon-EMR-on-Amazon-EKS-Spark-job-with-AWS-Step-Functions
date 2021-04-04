@@ -185,6 +185,7 @@ for example –jars jar1.jar,jar2.jar, jar3.jar.|
 |–class|Scala or Java class you wanted to run.This should be a fully qualified name with the package.For example org.apache.spark.examples.SparkPi.|
 
 **Note:** Files specified with --jars and --packages are uploaded to the cluster.
+
 **Example :**
 ```
 ./bin/spark-submit \
@@ -209,6 +210,7 @@ Below are some of the options & configurations specific to PySpark application.
 |–config spark.pyspark.python|Python binary executable to use for PySpark in both driver and executors.|
 
 **Note:** Files specified with --py-files are also uploaded to the cluster.
+
 **Example 1 :**
 ```
 ./bin/spark-submit \
