@@ -19,7 +19,7 @@ In this page, We will explain different spark-submit command options and configu
 - Submitting Application to Kubernetes
 - Submitting Application to Standalone
 
-## Spark Submit Command
+## 1. Spark Submit Command
 
 Spark binary comes with ```spark-submit.sh``` script file for Linux, Mac, and ```spark-submit.cmd```command file for windows, these scripts are available at ```$SPARK_HOME/bin``` directory.
 
@@ -45,5 +45,11 @@ Below is a spark-submit command with the most-used command options.
  ```
  ./bin/spark-class org.apache.spark.deploy.SparkSubmit <options & arguments>
  ```
- ## Spark Submit Options
+ ## 2. Spark Submit Options
  
+ Below I have explained some of the common options, configurations, and specific options to use with Scala and Python. You can also get all options available by running the below command.
+
+```./bin/spark-submit --help```
+###### 2.1 Deployment Modes (–deploy-mode)
+Using ```--deploy-mode```, you specify where to run the Spark application driver program. Spark support cluster and client deployment modes.
+
