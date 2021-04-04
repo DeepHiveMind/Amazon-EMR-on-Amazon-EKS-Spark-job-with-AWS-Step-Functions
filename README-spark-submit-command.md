@@ -54,7 +54,7 @@ Below is a spark-submit command with the most-used command options.
 Using ```--deploy-mode```, you specify where to run the Spark application driver program. Spark support cluster and client deployment modes.
 
 | VALUE        | DESCRIPTION |
-| -------------|:-----------:|
+| :-------------|:-----------|
 | cluster      |In cluster mode, the driver runs on one of the worker nodes, and this node shows as a driver on the Spark Web UI of your application. cluster mode is used to run production jobs.|
 | client       | In client mode, the driver runs locally where you are submitting your application from. client mode is majorly used for interactive and debugging purposes. Note that in client mode only the driver runs locally and all other executors run on different nodes on the cluster.|        
 
@@ -130,5 +130,19 @@ While submitting an application, you can also specify how much memory and cores 
  ```
  
  ## 3. Spark Submit Configurations
-   
-   
+ 
+Spark submit supports several configurations using ```--config```, these configurations are used to specify Application configurations, shuffle parameters, runtime configurations.
+Most of these configurations are the same for Spark applications written in Java, Scala, and Python(PySpark)
+
+| CONFIGURATION KEY | CONFIGURATION DESCRIPTION |
+| :------|:------------|
+| spark.executor.memoryOverhead|Number of partitions to create for wider shuffle transformations (joins and aggregations).
+| spark.serializer|org.apache.spark.serializer.
+JavaSerializer (default)
+org.apache.spark.serializer.KryoSerializer|
+| spark.sql.files.maxPartitionBytes|The maximum number of bytes to be used for every partition when reading files. Default 128MB.|
+| spark.dynamicAllocation.enabled	|Specifies whether to dynamically increase or decrease the number of executors based on the workload. Default true.|
+| spark.dynamicAllocation.minExecutors|A minimum number of executors to use when dynamic allocation is enabled.|
+|spark.dynamicAllocation.maxExecutors|A maximum number of executors to use when dynamic allocation is enabled.|
+|spark.executor.extraJavaOptions|Specify JVM options (see example below)|
+
