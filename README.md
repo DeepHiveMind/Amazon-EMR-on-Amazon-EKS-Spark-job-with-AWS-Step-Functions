@@ -241,6 +241,7 @@ When you choose the cluster name, you should see the PySpark job with Running st
 ![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-11.jpg)
 
 If the PySpark job fails for any unplanned reasons and you need rerun the Step Functions flow, you need to delete the existing Amazon EMR on EKS virtual cluster with the following CLI command. As of this writing, the Amazon EMR console doesn’t have an option to delete the Amazon EMR on EKS virtual cluster.
+
 ```aws emr-containers delete-virtual-cluster —id <cluster-id>```
 
 When the PySpark job is complete, Step Functions invokes the Create Athena Summarized Output Table step, which runs a Create External Table SQL statement on top of the S3 output path. After all the steps are complete, we should see all steps as green, as shown in the following screenshot.
@@ -248,4 +249,37 @@ When the PySpark job is complete, Step Functions invokes the Create Athena Summa
 ![alt text](https://github.com/DeepHiveMind/Learn-spark/blob/main/images/bdb1345-emr-eks-step-functions-12.jpg)
 
 You can also validate that the Amazon EMR on EKS virtual cluster is stopped and the S3 output path has a new set of Parquet files.
+
+## Validate the output with an Athena query
+
+When our Step Functions workflow is complete, we should have the output table in the AWS Glue Data Catalog, which we can validate in Athena by running a simple SELECT query. The following screenshot shows the output.
+
+
+
+## Create reports in QuickSight
+
+Now let’s do our final step of the architecture, which is creating BI reports through QuickSight by connecting to the Athena aggregated table.
+1. On the QuickSight console, choose **Athena** as your data source.
+
+
+
+2. For **Data source name**, enter a name.
+
+
+
+3. Select the database and table name you have in Athena.
+
+
+
+Now you can create a quick report to visualize your output, as shown in the following screenshot.
+
+
+
+If you’re using QuickSight SPICE storage to get better performance, you should refresh the dataset manually, or you can use the direct query option to fetch the latest data through Athena.
+
+## Conclusion
+
+This page explains how to orchestrate an Amazon EMR on EKS Spark job with Step Functions to implement a simple ETL pipeline that creates aggregated output from NYC trip reports.
+I hope this gives you a great starting point for using this solution with your datasets and applying more complex business rules to solve your transient cluster use cases.
+
 
